@@ -1,0 +1,17 @@
+MySQL中通用的分页SQL语句：
+
+假设现在已知：页码 + 每页显示的记录条数
+
+通用的分页SQL语句该怎么写？
+
+int pageNo = 1; // 页码 
+int pageSize = 3; // 每页显示的记录条数
+
+假设每页显示3条记录：
+第1页：limit 0 , 3
+第2页：limit 3 , 3
+第3页：limit 6 , 3
+第4页：limit 9 , 3
+第5页：limit 12 , 3
+
+第pageNo页：limit (pageNo-1)*pageSize , pageSize
