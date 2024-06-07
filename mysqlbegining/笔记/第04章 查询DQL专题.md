@@ -809,11 +809,22 @@ select empno,ename,sal from emp order by sal asc, ename asc;
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1667524337952-bbef44e7-488e-4c3e-9317-1fda80054c92.png#averageHue=%23110f0e&clientId=ud0c47669-2d83-4&from=paste&height=490&id=ud4173d66&originHeight=490&originWidth=813&originalType=binary&ratio=1&rotation=0&showTitle=false&size=40815&status=done&style=shadow&taskId=u231edd4c-d353-41e1-ba19-ebcc71d1d7b&title=&width=813)
 ## where和order by的位置
 找出岗位是MANAGER的员工姓名和薪资，按照薪资升序排列。
+
 ```sql
 select ename,sal from emp where job = 'MANAGER' order by sal asc;
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1667524386864-8d24513b-85f9-4f31-9462-4fe094cb0843.png#averageHue=%230f0e0e&clientId=ud0c47669-2d83-4&from=paste&height=233&id=ub579bda3&originHeight=233&originWidth=887&originalType=binary&ratio=1&rotation=0&showTitle=false&size=16318&status=done&style=shadow&taskId=u0fd108a3-5c49-4ec2-843b-b8e4f5861c3&title=&width=887)
 **通过这个例子主要是想告诉大家：where先执行，order by语句是最后执行的。**
+
+找出岗位是MANAGER的员工姓名和**年薪资**，按照薪资升序排列。
+
+```sql
+select ename,sal*12 as yealsal from emp where job='MANAGER' order by yealsal;
+```
+
+![image-20240605092834863](C:\Users\PC\AppData\Roaming\Typora\typora-user-images\image-20240605092834863.png)
+
+**这里能按照年薪排序，说明年薪已经被选择出来了，因此是先执行了select，后执行的order，where在select之前执行，因此where在order前执行**
 
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=qfi4f&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
 # distinct去重
@@ -834,7 +845,7 @@ select ename, distinct job from emp;
 ```
 分析一下：ename是14条记录，distinct job是5条记录，可以同时显示吗？
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668570696423-05844698-00b1-4e9e-aa98-1a53f465cff4.png#averageHue=%23151311&clientId=u005f32df-cdfa-4&from=paste&height=104&id=uc30b7a53&originHeight=104&originWidth=945&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15129&status=done&style=shadow&taskId=u877fbe24-2e82-46b5-85a4-fabccbe2c07&title=&width=945)
-报错了，通过测试得知，distinct只能出现在所有字段的最前面。
+报错了，通过测试得知，**distinct只能出现在所有字段的最前面**。
 **当distinct出现后，后面多个字段一定是联合去重的**，我们来做两个练习就知道了：
 练习1：找出公司中所有的工作岗位。
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668570864793-732f34aa-5b7d-4389-b4af-51cbd964215f.png#averageHue=%23100f0e&clientId=u005f32df-cdfa-4&from=paste&height=316&id=ub89f2b22&originHeight=316&originWidth=540&originalType=binary&ratio=1&rotation=0&showTitle=false&size=15489&status=done&style=shadow&taskId=u5dab6bed-8c9b-4ae8-b617-37c86a9d8f2&title=&width=540)
@@ -885,24 +896,27 @@ select lcase(ename) as ename from emp;
 有两种写法：
 第一种：substr('被截取的字符串', 起始下标, 截取长度)
 第二种：substr('被截取的字符串', 起始下标)，当第三个参数“截取长度”缺失时，截取到字符串末尾
-注意：起始下标从1开始，不是从0开始。（1表示从左侧开始的第一个位置，-1表示从右侧开始的第一个位置。）
+注意：**起始下标从1开始，不是从0开始**。（1表示从左侧开始的第一个位置，-1表示从右侧开始的第一个位置。）
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668567142258-6748508c-c3bb-440f-8ad7-c64df6c0028d.png#averageHue=%23100f0e&clientId=u005f32df-cdfa-4&from=paste&height=648&id=u521d5ef0&originHeight=648&originWidth=664&originalType=binary&ratio=1&rotation=0&showTitle=false&size=35242&status=done&style=shadow&taskId=u50bb124d-9e6b-4c8a-b48c-76594e0ec3c&title=&width=664)
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=xkp87&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
 练习：找出员工名字中第二个字母是A的
+
 ```sql
 select ename from emp where substr(ename, 2, 1) = 'A';
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668567271612-710d3592-6111-4ab5-97c1-12f809ac7645.png#averageHue=%230f0e0d&clientId=u005f32df-cdfa-4&from=paste&height=254&id=u2313b4ee&originHeight=254&originWidth=854&originalType=binary&ratio=1&rotation=0&showTitle=false&size=14523&status=done&style=shadow&taskId=u8ae9b244-f6d3-441c-89d0-4466eaa73e4&title=&width=854)
 ### 获取字符串长度length
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1672736218451-70fddda1-2541-4c91-9f39-3f968a6b6e12.png#averageHue=%23100f0f&clientId=uc0e8c595-6b95-4&from=paste&height=167&id=u69789788&originHeight=167&originWidth=525&originalType=binary&ratio=1&rotation=0&showTitle=false&size=7442&status=done&style=shadow&taskId=u39c20cea-67f3-49eb-9d8e-8c548360b72&title=&width=525)
-注意：一个汉字是2个长度。
+注意：**一个汉字是2个长度**。
+
 ### 获取字符的个数char_length
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1672736125194-177317bd-f65c-4c05-bda7-f58961b78fd7.png#averageHue=%2311100f&clientId=uc0e8c595-6b95-4&from=paste&height=168&id=uKcvT&originHeight=168&originWidth=582&originalType=binary&ratio=1&rotation=0&showTitle=false&size=8283&status=done&style=shadow&taskId=u2abebb18-4522-415a-bf80-859153252d1&title=&width=582)
 ### 字符串拼接
 语法：concat('字符串1', '字符串2', '字符串3'....)
 拼接的字符串数量没有限制。
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668569810019-a8c939c4-518d-4ed9-961a-27d4440d13d0.png#averageHue=%2311100f&clientId=u005f32df-cdfa-4&from=paste&height=437&id=u00e5d696&originHeight=437&originWidth=860&originalType=binary&ratio=1&rotation=0&showTitle=false&size=29849&status=done&style=shadow&taskId=ufbffbf88-a2ed-4341-a706-959748e2260&title=&width=860)
-注意：在mysql8之前，双竖线||也是可以完成字符串拼接的。但在mysql8之后，||只作为逻辑运算符，不能再进行字符串拼接了。
+注意：**在mysql8之前，双竖线||也是可以完成字符串拼接的。但在mysql8之后，||只作为逻辑运算符，不能再进行字符串拼接了**。
+
 ```sql
 select 'abc' || 'def' || 'xyz';
 ```
@@ -911,20 +925,23 @@ mysql8之后，|| 只作为“或者”运算符，例如：找出工资高于30
 select ename, sal from emp where sal > 3000 || sal < 900;
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1669780282134-d3a16d8a-e0fc-4744-beff-83b3579f6161.png#averageHue=%230f0f0e&clientId=u6210fc1e-5e54-4&from=paste&height=196&id=uc7e77230&originHeight=196&originWidth=950&originalType=binary&ratio=1&rotation=0&showTitle=false&size=11249&status=done&style=shadow&taskId=u19693054-9222-4df2-899e-3ed69a01a71&title=&width=950)
-mysql中可以使用+进行字符串的拼接吗？不可以，在mysql中+只作加法运算，在进行加法运算时，会将加号两边的数据尽最大的努力转换成数字再求和，如果无法转换成数字，最终运算结果通通是0
+mysql中可以使用+进行字符串的拼接吗？不可以，**在mysql中+只作加法运算**，在进行加法运算时，会将加号两边的数据尽最大的努力转换成数字再求和，如果无法转换成数字，最终运算结果通通是0
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=r5hjr&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
+
 ### 去除字符串前后空白trim
 ```sql
 select concat(trim('    abc    '), 'def');
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668570023583-bcf0b431-c34c-486b-9ee0-e571ff3c158d.png#averageHue=%2310100f&clientId=u005f32df-cdfa-4&from=paste&height=204&id=u800e8929&originHeight=204&originWidth=715&originalType=binary&ratio=1&rotation=0&showTitle=false&size=12536&status=done&style=shadow&taskId=uc6e946c5-bd11-4f08-83a5-34b7d5e1a78&title=&width=715)
-默认是去除前后空白，也可以去除指定的前缀后缀，例如：
+**默认是去除前后空白，也可以去除指定的前缀后缀**，例如：
 去除前置0
+
 ```sql
 select trim(leading '0' from '000111000');
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1668570194415-8f78ced1-8f36-42d3-a829-b81fc4132c85.png#averageHue=%23121110&clientId=u005f32df-cdfa-4&from=paste&height=214&id=u54da0ae5&originHeight=214&originWidth=706&originalType=binary&ratio=1&rotation=0&showTitle=false&size=12307&status=done&style=shadow&taskId=u4bd5c984-5076-4b41-936e-2cb2934e2a0&title=&width=706)
 去除后置0
+
 ```sql
 select trim(trailing '0' from '000111000');
 ```
@@ -962,7 +979,7 @@ round(x,y) 四舍五入，保留y位小数
 ## 空处理
 ifnull(x, y)，空处理函数，当x为NULL时，将x当做y处理。
 ifnull(comm, 0)，表示如果员工的津贴是NULL时当做0处理。
-在SQL语句中，凡是有NULL参与的数学运算，最终的计算结果都是NULL：
+**在SQL语句中，凡是有NULL参与的数学运算，最终的计算结果都是NULL：**
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1669798864111-5cffd59f-d15c-4f6c-a2d8-0b623ec1f16c.png#averageHue=%23100f0e&clientId=u57006619-2538-4&from=paste&height=658&id=ue1cf6783&originHeight=658&originWidth=408&originalType=binary&ratio=1&rotation=0&showTitle=false&size=23225&status=done&style=shadow&taskId=ua42e9e3c-fa93-4f6c-979d-d5444c21108&title=&width=408)
 看这样一个需求：查询每个员工的年薪。（年薪 = (月薪 + 津贴) * 12个月。注意：有的员工津贴comm是NULL。）
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1669798945415-90bccaa6-1dda-4ebd-bc50-63ab5ba2b89a.png#averageHue=%23100f0e&clientId=u57006619-2538-4&from=paste&height=573&id=u514525d4&originHeight=573&originWidth=850&originalType=binary&ratio=1&rotation=0&showTitle=false&size=36066&status=done&style=shadow&taskId=ubb59ae71-c22d-456f-85bf-df0182998af&title=&width=850)
@@ -970,6 +987,7 @@ ifnull(comm, 0)，表示如果员工的津贴是NULL时当做0处理。
 以上查询结果中显示SMITH等人的年薪是NULL，这是为什么，这是因为SMITH等人的津贴comm是NULL，有NULL参与的数学运算，最终结果都是NULL，显然这个需要空处理，此时就用到了ifnull函数：
 ![image.png](https://cdn.nlark.com/yuque/0/2022/png/21376908/1669799067232-4896fa47-5c64-409a-b970-dddc31e06050.png#averageHue=%23100f0e&clientId=u57006619-2538-4&from=paste&height=573&id=u59b02703&originHeight=573&originWidth=982&originalType=binary&ratio=1&rotation=0&showTitle=false&size=42887&status=done&style=shadow&taskId=u063b2776-3482-4b4f-888c-3623426b77b&title=&width=982)
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=X7H0g&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
+
 ## 日期和时间相关函数
 ### 获取当前日期和时间
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1672707310711-3115e4af-385c-4565-89c7-25bad76e8a6a.png#averageHue=%23121110&clientId=uc0e8c595-6b95-4&from=paste&height=162&id=uc379723b&originHeight=162&originWidth=404&originalType=binary&ratio=1&rotation=0&showTitle=false&size=7211&status=done&style=shadow&taskId=uedf1c447-2a71-4f9a-9f96-98b9f249622&title=&width=404)
@@ -1006,6 +1024,7 @@ now()和sysdate()的区别：
 一次性提取一个给定日期的“时分秒”部分，可以使用time()函数，例如：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1672721340191-9c568184-73b5-4c26-9035-95245016ba4f.png#averageHue=%2311100f&clientId=uc0e8c595-6b95-4&from=paste&height=161&id=u0bb5bc88&originHeight=161&originWidth=428&originalType=binary&ratio=1&rotation=0&showTitle=false&size=7598&status=done&style=shadow&taskId=u09037fc7-e074-481b-bf6a-ccc8fc49cf6&title=&width=428)
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=JhMuY&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
+
 ### date_add函数
 date_add函数的作用：给指定的日期添加间隔的时间，从而得到一个新的日期。
 date_add函数的语法格式：date_add(日期, interval expr 单位)，例如：
@@ -1146,7 +1165,7 @@ cast函数用于将值从一种数据类型转换为表达式中指定的另一�
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1672737802812-d04d581c-138c-4e4e-97d4-c979558e9b2e.png#averageHue=%2311100f&clientId=uc0e8c595-6b95-4&from=paste&height=170&id=u214f15ff&originHeight=170&originWidth=714&originalType=binary&ratio=1&rotation=0&showTitle=false&size=8572&status=done&style=shadow&taskId=ud2929b4c-8582-4dc3-a2ba-8de75b96e58&title=&width=714)
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=zcFrS&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
 ## 加密函数
-md5函数，可以将给定的字符串经过md5算法进行加密处理，字符串经过加密之后会生成一个固定长度32位的字符串，md5加密之后的密文通常是不能解密的：
+md5函数，可以将给定的字符串经过md5算法进行加密处理，字符串经过加密之后会生成一个固定长度32位的字符串，**md5加密之后的密文通常是不能解密的**：
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1672737046172-5ee0458a-60c6-4bae-b075-94b7dee440ab.png#averageHue=%23131110&clientId=uc0e8c595-6b95-4&from=paste&height=220&id=u6e900f32&originHeight=220&originWidth=568&originalType=binary&ratio=1&rotation=0&showTitle=false&size=10865&status=done&style=shadow&taskId=uabd2a6f3-e59b-4dac-ba4c-bcc743fafad&title=&width=568)
 
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=ilOoD&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
@@ -1185,10 +1204,12 @@ select sum(sal) from emp;
 ```sql
 select sum(comm) from emp;
 ```
-重点：所有的分组函数都是自动忽略NULL的。
+***重点：所有的分组函数都是自动忽略NULL的。***
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=QJCgr&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
+
 ## count
 **统计员工人数**
+
 ```sql
 select count(ename) from emp;
 select count(*) from emp;
@@ -1214,11 +1235,12 @@ select ename,job from emp where sal > avg(sal); 这个会报错的
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg#averageHue=%23f9f8f8&from=url&id=guJg0&originHeight=78&originWidth=1400&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
 # 分组查询
 ## group by
-按照某个字段分组，或者按照某些字段联合分组。注意：group by的执行是在where之后执行。
+按照某个字段分组，或者按照某些字段联合分组。注意：**group by的执行是在where之后执行。**
 语法：
 group by 字段
 group by 字段1,字段2,字段3....
 **找出每个岗位的平均薪资**
+
 ```sql
 select job, avg(sal) from emp group by job;
 ```
@@ -1238,7 +1260,7 @@ select ename,deptno,avg(sal) from emp group by deptno; // 这个SQL执行后会�
 ```
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1676866192155-44d23157-87d0-4a58-a9d5-2641619d74fe.png#averageHue=%23171412&clientId=u417b9e29-4007-4&from=paste&height=140&id=uae74e6b8&originHeight=140&originWidth=1141&originalType=binary&ratio=1&rotation=0&showTitle=false&size=25591&status=done&style=shadow&taskId=u4097c74b-3d21-485a-a74f-1390352d2e3&title=&width=1141)
 ## having
-having写在group by的后面，当你对分组之后的数据不满意，可以继续通过having对分组之后的数据进行过滤。
+**having必须写在group by的后面**，当你对分组之后的数据不满意，可以继续通过having对分组之后的数据进行过滤。
 where的过滤是在分组前进行过滤。
 使用原则：尽量在where中过滤，实在不行，再使用having。越早过滤效率越高。
 
@@ -1248,8 +1270,8 @@ select deptno,avg(sal) from emp where deptno<>20 group by deptno; // 建议
 select deptno,avg(sal) from emp group by deptno having deptno <> 20; // 不建议
 ```
 
-
 **查询每个部门平均薪资，找出平均薪资高于2000的。**
+
 ```sql
 select deptno,avg(sal) from emp group by deptno having avg(sal) > 2000;
 ```
@@ -1613,6 +1635,7 @@ union all是直接将查询结果集合并，不进行去重操作。（union al
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1678078225300-461e069f-0c80-4745-88a7-2969acccd076.png#averageHue=%23141210&clientId=ue32f086e-fc2b-4&from=paste&height=488&id=u46d82364&originHeight=488&originWidth=404&originalType=binary&ratio=1&rotation=0&showTitle=false&size=31584&status=done&style=shadow&taskId=u459bc800-2e1c-4247-866e-b06b0313a0c&title=&width=404)
 ![image.png](https://cdn.nlark.com/yuque/0/2023/png/21376908/1678078278429-e97f96a1-7429-4b68-8df9-3bda3a890797.png#averageHue=%23151210&clientId=ue32f086e-fc2b-4&from=paste&height=884&id=u2ef6109a&originHeight=884&originWidth=408&originalType=binary&ratio=1&rotation=0&showTitle=false&size=60134&status=done&style=shadow&taskId=u8c39e0b0-c274-46f0-8866-347160e1418&title=&width=408)
 案例：查询工作岗位是MANAGER和SALESMAN的员工。
+
 ```sql
 select ename,sal from emp where job='MANAGER'
 union all
@@ -1788,6 +1811,28 @@ select max(sal) from emp where empno not in(select mgr from emp where mgr is not
 ```sql
 select ename,sal from emp where sal > (select max(sal) from emp where empno not in(select mgr from emp where mgr is not null));
 ```
+【方法二】：把emp表看成两张表e和t，要查找的是普通员工的最高薪水，先要找到普通员工，普通员工的要求是其员工编号e.empno不是任意一个员工t.mgr，或者其领导mgr不是null，因此我们只需要使用not exists将不符合要求的员工剔除掉即可。
+
+第一步：找出所有普通员工的薪水
+
+```sql
+select e.ename,e.sal from emp e where not exists (select distinct mgr from emp t where e.mgr is null or t.mgr=e.empno);
+```
+
+第二步：求普通员工薪水的最大值
+
+```sql
+select max(e.sal) from emp e where not exists (select distinct mgr from emp t where e.mgr is null or t.mgr=e.empno);
+```
+
+第三步：薪水大于普通员工最高薪水的一定是领导
+
+```sql
+select ename,sal from emp where sal > (select max(e.sal) from emp e where not exists (select distinct mgr from emp t where e.mgr is null or t.mgr=e.empno));
+```
+
+
+
 ## 第10题
 
 10. 取得薪水最高的前五名员工
@@ -1920,6 +1965,12 @@ select e.ename,e.sal,d.dname from emp e join dept d on e.deptno = d.deptno;
 ```sql
 select d.deptno,d.dname,d.loc,count(e.deptno) from emp e right join dept d on e.deptno=d.deptno group by  d.deptno,d.dname,d.loc;
 ```
+```sql
+select d.*,if(t.ecount is null,0,t.ecount) ecount from (select deptno,count(ename) ecount from emp group by deptno) t right join dept d on t.deptno=d.deptno;
+```
+
+
+
 ## 第29题
 
 29. 列出各种工作的最低工资及从事此工作的雇员姓名
