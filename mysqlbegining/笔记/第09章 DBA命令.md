@@ -27,20 +27,28 @@ select user,host from mysql.user;
 ```sql
 # 将所有库所有表的查询权限赋予本地用户java1
 grant select,insert,delete,update,create on *.* to 'java1'@'localhost';
+flush privileges;
 
 # 将powernode库中所有表的所有权限赋予本地用户java1
 grant all privileges on powernode.* to 'java1'@'localhost';
 ```
-授权后必须刷新权限，才能生效：flush privileges
+**授权后必须刷新权限，才能生效：flush privileges**
 查看某个用户拥有哪些权限？
 show grants for 'java1'@'localhost'
 show grants for 'java2'@'%'
 
-with grant option：
+**with grant option：**也有给其他用户授权的能力了(但是只能授当前自己所有的权限)。
 
 ```sql
 # with grant option的作用是：java2用户也可以给其他用户授权了。
 grant select,insert,delete,update on *.* to 'java2'@'%' with grant option;
+```
+
+这时java2就可以给其他用户授自己所有的权限的，但此时java2用户还不能执行flush privileges语句，为了让java2可以执行这条命令，还需要给java2授一个权限：reload。需要使用root用户来给java2授此权限
+
+```sql
+grant reload on *.* to 'java2'@'%';
+flush privileges;
 ```
 ![](https://cdn.nlark.com/yuque/0/2023/jpeg/21376908/1692002570088-3338946f-42b3-4174-8910-7e749c31e950.jpeg?x-oss-process=image%2Fresize%2Cw_1177%2Climit_0%2Finterlace%2C1%2Finterlace%2C1#averageHue=%23f9f8f8&from=url&id=SE1yi&originHeight=66&originWidth=1177&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=shadow&title=)
 # 撤销用户权限
