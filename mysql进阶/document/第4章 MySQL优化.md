@@ -56,6 +56,11 @@ select empno,ename,sleep(4) from emp where ename='smith';
 ## show profiles
 通过show profiles可以查看一个SQL语句在执行过程中具体的耗时情况。帮助我们更好的定位问题所在。
 
+注意：
+
+* navicat for mysql是默认开启profiling开关的
+* dos命令窗口默认是关闭的
+
 查看当前数据库是否支持 profile操作：
 ```sql
 select @@have_profiling;
@@ -130,7 +135,7 @@ explain select e.ename,d.dname from emp e join dept d on e.deptno=d.deptno where
 反映了查询表中数据时的访问类型，常见的值：
 
 1. NULL：效率最高，一般不可能优化到这个级别，只有查询时没有查询表的时候，访问类型是NULL。例如：select 1;
-2. system：通常访问系统表的时候，访问类型是system。一般也很难优化到这个程序。
+2. system：通常访问系统表的时候，访问类型是system。一般也很难优化到这个程度。
 3. const：根据主键或者唯一性索引查询，索引值是常量值时。explain select * from emp where empno=7369;
 4. eq_ref：根据主键或者唯一性索引查询。索引值不是常量值。
 5. ref：使用了非唯一的索引进行查询。
@@ -237,7 +242,7 @@ explain select * from t_customer where gender='M' and age=20;
 验证结果：没有使用任何索引
 ![image.png](https://cdn.nlark.com/yuque/0/2024/png/21376908/1709620812205-51aeb294-baeb-4170-9aec-9227568689e8.png#averageHue=%23f1f1f0&clientId=u75f16c53-61e9-4&from=paste&height=76&id=uaede0bcd&originHeight=76&originWidth=1224&originalType=binary&ratio=1&rotation=0&showTitle=false&size=5254&status=done&style=shadow&taskId=ucfc9e344-95a0-4783-a44e-436766ba3e8&title=&width=1224)
 
-验证6：
+验证6：(只有name字段使用了索引，因为中间断开了，导致gender没有使用索引)
 ```sql
 explain select * from t_customer where name='zhangsan' and gender='M';
 ```
@@ -550,7 +555,7 @@ explain select empno,ename,job from emp6 where ename='SMITH' and job='CLERK';
 ![image.png](https://cdn.nlark.com/yuque/0/2024/png/21376908/1709713204610-5a0d695a-170d-447f-9ba0-a5b68719d539.png#averageHue=%23f3f2f2&clientId=u832e6504-1b74-4&from=paste&height=89&id=u38af9318&originHeight=89&originWidth=1473&originalType=binary&ratio=1&rotation=0&showTitle=false&size=5990&status=done&style=shadow&taskId=uec0c7d7e-a85c-4e36-84f6-08136e4672d&title=&width=1473)
 对于以上查询语句，使用复合索引避免了回表，因此这种情况下还是建议使用复合索引。
 
-注意：创建索引时应考虑最左前缀原则，主字段并且具有很强唯一性的字段建议排在第一位，例如：
+注意：**创建索引时应考虑最左前缀原则，主字段并且具有很强唯一性的字段建议排在第一位**，例如：
 ```sql
 create index idx_emp_ename_job on emp(ename,job);
 ```
